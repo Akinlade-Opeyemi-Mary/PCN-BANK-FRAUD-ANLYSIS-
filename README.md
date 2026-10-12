@@ -491,7 +491,7 @@ Three Excel dashboards were developed to examine recorded fraud exposure, custom
 
 **Takeaway:** The dashboard reveals reporting activity and monitoring-data gaps. Further evidence is required to assess detection accuracy, investigation bottlenecks and prevention effectiveness.
 
-![Operational Efficiency Dashboard](assets/operational-efficiency-dashboard.png)
+![Operational Efficiency Dashboard](https://github.com/Akinlade-Opeyemi-Mary/PCN-BANK-FRAUD-ANLYSIS-/blob/66318a5f53a3c2532a68c9af11db8224f9a43987/OPERATIONAL%20EFFICIENCY%20DASHBOARD.png)
 
 ---
 
