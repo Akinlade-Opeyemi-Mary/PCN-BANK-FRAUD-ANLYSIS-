@@ -369,7 +369,7 @@ Three Excel dashboards were developed to examine recorded fraud exposure, custom
 
 **Takeaway:** The dashboard identifies where recorded exposure concentrates and which accounts warrant review. It does not establish confirmed losses, formal risk classifications or detection effectiveness.
 
-![Fraud Detection Dashboard](assets/fraud-detection-dashboard.png)
+![Fraud Detection Dashboard](https://github.com/Akinlade-Opeyemi-Mary/PCN-BANK-FRAUD-ANLYSIS-/blob/235dd83b46996c1f5fb4eb97ff8e9e20ea42e3e0/FRAUD%20DETECTION%20DASHBORD.png)
 
 ---
 
