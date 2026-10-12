@@ -226,9 +226,7 @@ The analytical grain is **one supplied record per row**, rather than one unique 
 ### Table Relationships
 
 The model diagram shows two one-to-many relationships between the calendar and prepared records:
-### Data Model Diagram
-
-![PCN Bank Power Pivot Data Model](assets/data-model.png)
+![PCN Bank Power Pivot Data Model](https://github.com/Akinlade-Opeyemi-Mary/PCN-BANK-FRAUD-ANLYSIS-/blob/e14a1f0973ac765b3de943f8d2f09efe07a1fdfa/Cleaned%20Data%20and%20Date%20Table%20Relationship.png)
 
 The model connects `Date_Table` with `Cleaned_Data` through one-to-many relationships. The solid line represents an active relationship, while the dashed line represents an inactive relationship.
 
@@ -305,3 +303,206 @@ Date completeness measures availability, not accuracy. Posting intervals do not 
 * Distinct customer, transaction and device counts are not automatically additive across groups.
 * Total rates are recalculated from their components rather than calculated by averaging segment percentages.
 * Date relationships and filter behaviour require validation before interpreting time-based results.
+
+# EXECUTIVE DASHBOARDS & ANALYSIS
+
+The analysis begins with a central question: **where does recorded fraud exposure concentrate, and what should PCN Bank investigate first?** The Fraud Detection Dashboard examines the scale of exposure across case types, banking channels, merchants and countries. Counts, rates and recorded amounts reveal different priorities, connecting the overall picture to account-level investigation.
+
+The story then moves beyond transactions to the customers represented in those records. The Customer Fraud Behaviour Dashboard explores device associations, country differences, verification status and transaction activity to understand which patterns warrant closer review. These comparisons reveal investigation leads while raising questions about missing information, small customer segments and the timing of recorded events.
+
+Finally, the Operational Efficiency Dashboard examines the evidence supporting monitoring itself. SAR activity, incomplete dates, missing amounts and posting-date exceptions show where reporting visibility is limited. Together, the three dashboards connect **where exposure appears → which customer patterns deserve investigation → what evidence PCN Bank needs to make stronger decisions**.
+
+Three Excel dashboards were developed to examine recorded fraud exposure, customer behaviour and operational monitoring. The analysis identifies investigation priorities, explains their business implications and highlights questions that the available data cannot answer.
+
+---
+
+## 1. Fraud Detection Dashboard
+
+**Objective:** Understand the scale of recorded fraud, identify concentrations across cases and channels, and support account-level investigation.
+
+**Key Insights:**
+
+- **Total Records:** 1,000
+- **Unique Transaction IDs:** 930
+- **Fraud-Labelled Records:** 196
+- **Recorded Fraud Rate:** 19.60%
+
+### Fraud by Case Type
+
+- Credit Card recorded the highest fraud-labelled count: **55 records**, followed by Card Fraud with **44**.
+- Money Laundering had the largest provisional recorded amount: **$185.23K**, despite accounting for only **15 fraud-labelled records**.
+- Account Takeover followed with **$151.86K** across **38 fraud-labelled records**.
+
+**Business implication:** Fraud count and recorded amount identify different investigation priorities. Categories with fewer records can still represent substantial recorded exposure. Amounts require currency and repeated-ID validation before being interpreted as unique transaction totals or losses.
+
+### Channel Exposure
+
+- POS recorded the highest fraud-labelled volume: **50 records**, with a **20.83% recorded fraud rate**.
+- E-Commerce followed with **36 fraud-labelled records**, with a **20.11% rate**.
+- ATM, Branch and Wire Transfer displayed **100% recorded fraud rates**, but contained only **14, 6 and 5 records**, respectively.
+
+**Business implication:** Review high-volume channels alongside small groups with high observed rates. The small-channel results do not establish bank-wide risk or control failure.
+
+### Merchant and Geographic Concentrations
+
+- P2P Transfer led merchant-category recorded amounts at **$105.41K**, followed by Wire Transfer at **$74.83K**.
+- Electronics had the largest merchant-category fraud-labelled count: **24 records**.
+- Nigeria had the highest merchant-country fraud-labelled count: **32**, followed by India with **27** and the United States with **26**.
+
+**Business implication:** Transfer-related amounts and electronics-related record volumes warrant different reviews. Country counts describe exposure volume; they do not establish country fraud rates.
+
+### Monthly Trend
+
+- The saved monthly view was highest in **July: 28 fraud-labelled records**, and lowest in **June: 1**.
+- The monthly view contains **180 records**; another **16 fraud-labelled records lack transaction dates**.
+
+**Business implication:** Validate date interpretation and year filtering before describing seasonal peaks. The monthly chart does not represent all 196 fraud-labelled records.
+
+### Investigation Gaps and Unanswered Questions
+
+| Question | Available evidence | Remaining gap |
+| --- | --- | --- |
+| How many transactions are suspicious or independently flagged? | Fraud labels and SAR indicators | Confirm flag definitions and distinguish suspicion, alerts and fraud labels. |
+| Which accounts are formally high risk? | Account-level recorded exposure in the investigation table | Agree classification criteria and review case evidence. |
+| How accurate is fraud detection? | Recorded fraud classifications | Obtain matched alerts and confirmed outcomes. |
+| What are the confirmed financial losses? | Provisional recorded amounts | Obtain verified losses, currency definitions and repeated-ID treatment. |
+
+**Takeaway:** The dashboard identifies where recorded exposure concentrates and which accounts warrant review. It does not establish confirmed losses, formal risk classifications or detection effectiveness.
+
+![Fraud Detection Dashboard](assets/fraud-detection-dashboard.png)
+
+---
+
+## 2. Customer Fraud Behaviour Dashboard
+
+**Objective:** Understand customer exposure and investigate patterns associated with devices, country comparisons, verification status and transaction activity.
+
+**Key Insights:**
+
+- **Unique Customers:** 313
+- **Customers with Fraud-Labelled Records:** 136
+- **Customer Fraud Exposure Rate:** 43.45%
+- **Fraud Records with a New-Device Flag:** 138 of 196, or 70.41%
+
+### Device and Country Associations
+
+- New-device flags appeared on **70.41% of fraud-labelled records**.
+- Recorded fraud rates were **48.40% for different-country records**, compared with **2.24% for same-country records**.
+- The saved different-country comparison includes Unknown merchant countries, requiring eligibility review.
+
+**Business implication:** Device and country associations support investigation of authentication and transaction context. They do not prove account takeover or overseas travel. The device percentage is a share of fraud records, not the fraud rate among new devices.
+
+### KYC Exposure
+
+| KYC Status | Total Records | Fraud-Labelled Records | Recorded Fraud Rate |
+| --- | ---: | ---: | ---: |
+| Pending | 13 | 13 | 100.00% |
+| Expired | 12 | 12 | 100.00% |
+| Under Review | 11 | 11 | 100.00% |
+| Complete | 949 | 158 | 16.65% |
+
+- Complete contains the most fraud-labelled records by count because it is a much larger group.
+- Pending, Expired and Under Review show higher rates in small groups.
+- The displayed KYC table excludes **15 blank-status records**, including **2 fraud-labelled records**.
+
+**Business implication:** Reconcile missing categories and review KYC timing before assessing verification performance. These associations do not demonstrate that verification failed.
+
+### Login and Transaction Activity
+
+| Available-Value Average | Fraud-Labelled Records | Non-Fraud-Labelled Records |
+| --- | ---: | ---: |
+| Failed Login Attempts | 14.75 | 14.69 |
+| Hourly Transaction Count | 36.49 | 17.01 |
+
+- Failed-login averages were very similar.
+- Hourly transaction activity was higher among fraud-labelled records.
+- Missing numerical values were excluded from averages rather than treated as zero.
+
+**Business implication:** Higher recorded hourly activity warrants review, while failed-login averages provide little separation between the groups. Neither comparison establishes causation.
+
+### Customer Exposure by Country
+
+- United Arab Emirates had **21 customers with fraud-labelled records**.
+- Singapore followed with **20**, and the United Kingdom with **19**.
+
+**Business implication:** These are exposed-customer counts, not country risk rates. Customer denominators are needed before comparing prevalence.
+
+### Investigation Gaps and Unanswered Questions
+
+| Question | Available evidence | Remaining gap |
+| --- | --- | --- |
+| Which customers make frequent cross-country transactions? | Customer-level distinct transaction counts and cross-country shares | Define “frequent,” establish an observation period and validate dates, countries and repeated IDs. |
+| Which customers have multiple-device logins? | Device IDs associated with transaction records | Obtain actual login events, timestamps and device ownership information. |
+| Does KYC reduce fraud? | Recorded KYC groups and fraud labels | Reconcile missing status, establish timing and obtain comparable control/outcome evidence. |
+| Do device or country differences cause fraud? | Observed associations | Additional contextual evidence and an appropriate causal analysis. |
+
+**Takeaway:** The dashboard identifies customer investigation leads. It does not confirm multiple-device logins, frequent overseas activity or the effectiveness of verification controls.
+
+![Customer Fraud Behaviour Dashboard](assets/customer-fraud-dashboard.png)
+
+---
+
+## 3. Operational Efficiency Dashboard
+
+**Objective:** Examine recorded SAR activity, monitoring-data completeness and posting-date exceptions, while identifying the evidence needed to assess operational performance.
+
+**Key Insights:**
+
+- **SAR-Filed Records:** 17
+- **Recorded SAR Filing Share on Fraud:** 8.67%
+- **Transaction-Date Completeness:** 91.40%
+- **Posting-Date Completeness:** 93.80%
+- **Records Missing Transaction Amounts:** 14
+
+### SAR Filing Activity
+
+| Case Type | SAR-Filed Records | Filing Share on Fraud |
+| --- | ---: | ---: |
+| AML Suspicion | 6 | 75.00% |
+| Money Laundering | 11 | 73.33% |
+
+**Business implication:** The data describes recorded filing activity. It does not establish missed mandatory filings, compliance or control effectiveness.
+
+### Monitoring-Data Gaps
+
+- **86 records** lack transaction dates.
+- **62 records** lack posting dates.
+- **143 records** lack either date; five lack both.
+- Mobile Banking had the largest missing-amount count: **4**, followed by POS with **3**.
+
+**Business implication:** Missing information limits time analysis and recorded-amount coverage. Compare missing counts with channel denominators before ranking completeness.
+
+### Posting-Date Exceptions
+
+- **63 records** have posting dates before transaction dates.
+- The saved ATM average posting interval was **28.43 days**, including **89-day and 294-day intervals**.
+- These values require source-date validation before being classified as delays.
+
+**Business implication:** Unusual intervals may reflect date interpretation or recording issues. Posting intervals do not measure fraud-detection or investigation speed.
+
+### Investigation Gaps and Unanswered Questions
+
+| Question | Available evidence | Remaining gap |
+| --- | --- | --- |
+| Where are investigation delays and backlogs? | Posting dates and interval exceptions | Obtain alert, assignment, investigation-start and closure timestamps, plus case status. |
+| How accurate is the detection system? | Fraud labels and SAR activity | Obtain matched alerts and confirmed outcomes. |
+| Are prevention measures reducing fraud? | A supplied snapshot of recorded activity | Obtain control-change history and comparable periods/populations. |
+| Do long posting intervals represent genuine delays? | Prepared dates and calculated intervals | Validate original dates and posting-process definitions. |
+
+**Takeaway:** The dashboard reveals reporting activity and monitoring-data gaps. Further evidence is required to assess detection accuracy, investigation bottlenecks and prevention effectiveness.
+
+![Operational Efficiency Dashboard](assets/operational-efficiency-dashboard.png)
+
+---
+
+## Executive Summary of Findings
+
+Across the dashboards, three connected findings emerged:
+
+- **Exposure has different dimensions:** fraud counts, rates and provisional amounts highlight different investigation priorities.
+- **Customer signals need context:** device, country, KYC and activity patterns warrant review, but missingness, small groups and event timing limit interpretation.
+- **Operational assessment needs better evidence:** data-quality exceptions affect visibility, while linked alerts and case outcomes are needed to evaluate performance.
+
+## Key Insight
+
+PCN Bank’s immediate priority is to investigate recorded exposure while strengthening the reliability of its monitoring evidence. Validated dates, agreed risk definitions, reconciled segments and linked investigation outcomes will support more defensible reporting and performance assessment.
