@@ -438,7 +438,7 @@ Three Excel dashboards were developed to examine recorded fraud exposure, custom
 
 **Takeaway:** The dashboard identifies customer investigation leads. It does not confirm multiple-device logins, frequent overseas activity or the effectiveness of verification controls.
 
-![Customer Fraud Behaviour Dashboard](assets/customer-fraud-dashboard.png)
+![Customer Fraud Behaviour Dashboard](https://github.com/Akinlade-Opeyemi-Mary/PCN-BANK-FRAUD-ANLYSIS-/blob/610ad9b612eced1d0650bd3ba5bcbfed6df60b5d/CUSTOMER%20FRAUD%20BEHAVIOUR%20DASHBOARD.png)
 
 ---
 
