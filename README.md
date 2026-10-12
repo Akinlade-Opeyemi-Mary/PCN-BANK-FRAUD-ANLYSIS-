@@ -506,3 +506,110 @@ Across the dashboards, three connected findings emerged:
 ## Key Insight
 
 PCN Bank’s immediate priority is to investigate recorded exposure while strengthening the reliability of its monitoring evidence. Validated dates, agreed risk definitions, reconciled segments and linked investigation outcomes will support more defensible reporting and performance assessment.
+
+# STRATEGIC RECOMMENDATIONS
+
+The analysis supports a combination of targeted investigation, data-quality improvement and stronger operational evidence.
+
+## 1. Prioritise Recorded Account and Transaction Exposure
+
+- Review accounts and customers represented in fraud-labelled records using the supporting investigation tables.
+- Consider fraud counts, rates, recorded amounts and group sizes together.
+- Investigate high-volume channels such as POS alongside smaller groups with high recorded rates.
+- Review Money Laundering, Account Takeover and transfer-related recorded amounts after confirming currency units and repeated transaction IDs.
+
+**Business implication:** This provides a more defensible basis for investigation priorities. Recorded exposure should not automatically be treated as confirmed wrongdoing, financial loss or a formal high-risk classification.
+
+## 2. Strengthen Customer Verification and Behavioural Investigation
+
+- Reconcile the 15 records missing from the displayed KYC analysis, including two fraud-labelled records.
+- Review Pending, Expired and Under Review cases, including when each status was recorded.
+- Investigate new-device associations using authentication history and device ownership.
+- Separate unknown countries from known-country comparisons.
+- Define an observation period and threshold before classifying cross-country activity as frequent.
+
+**Business implication:** These actions help distinguish meaningful investigation signals from incomplete information, small-group effects or unsupported interpretations.
+
+## 3. Resolve Data-Quality Exceptions
+
+- Validate ambiguous transaction and posting dates against the source.
+- Review the 63 negative posting intervals and unusually long ATM intervals.
+- Confirm the meaning of repeated transaction IDs before removing or consolidating records.
+- Verify the USD-named amount field and its relationship to recorded currency codes.
+- Preserve missing values and document their effect on analytical coverage.
+
+**Business implication:** More reliable source interpretation supports clearer trends, segment comparisons and recorded-amount reporting.
+
+## 4. Improve Reporting Consistency
+
+- Correct KPI labels so records, transactions, customers and percentages remain distinguishable.
+- Keep denominators available alongside rates and behavioural averages.
+- Reconcile dashboard segments with their relevant baseline totals.
+- Test date relationships, query refresh, linked KPI cells, navigation and VBA chart switching in desktop Excel.
+- Retain investigation notes beside findings that require further evidence.
+
+**Business implication:** Consistent definitions and tested interactions make the dashboards easier to interpret and maintain.
+
+## 5. Build Evidence for Operational Performance Assessment
+
+- Obtain linked alert IDs, transaction references and confirmed investigation outcomes.
+- Capture alert creation, assignment, investigation-start and closure timestamps.
+- Include case status to support backlog and open-case analysis.
+- Agree eligible populations and definitions before calculating detection accuracy or investigation-time measures.
+- Collect control-change history and comparable reporting periods before assessing prevention effectiveness.
+
+**Business implication:** This establishes the evidence needed to evaluate detection and case handling. SAR filing share and posting intervals cannot answer those questions alone.
+
+---
+
+# IMPLEMENTATION ROADMAP
+
+The following sequence is proposed for client review. Responsibilities and timing require agreement before implementation.
+
+| Stage | Proposed Owner | Priority Actions | Expected Output |
+| --- | --- | --- | --- |
+| **1. Validate** | Data Owner | Confirm flag meanings, currency units, repeated transaction IDs and date interpretation. | Source-backed definitions and an exception register. |
+| **2. Investigate** | Fraud Operations | Review account/customer exposure, small KYC groups and device/country signals. | Documented case reviews and agreed risk criteria. |
+| **3. Reconcile** | Reporting Analyst | Include omitted categories, correct labels and test model relationships, refresh and dashboard controls. | Reconciled reporting views and a workbook test log. |
+| **4. Link Evidence** | Systems / Case-Management Owner | Connect alerts, case histories, timestamps and confirmed outcomes. | An analytical dataset suitable for operational performance assessment. |
+| **5. Monitor** | Reporting Analyst and Fraud Operations | Track agreed indicators across comparable periods with coverage and exception information. | Repeatable reporting and evidence-based evaluation of changes. |
+
+**Expected outcome:** More reliable reporting, clearer investigation priorities and sufficient evidence to assess detection and case handling.
+
+**Next decision:** Agree the priorities, responsible teams, required data and completion criteria with PCN Bank.
+
+---
+
+# STRATEGIC OUTCOME
+
+Implementing the proposed actions would support:
+
+- **Reliable fraud reporting** through validated definitions, dates, identifiers and amount units.
+- **Clearer investigation priorities** through combined assessment of counts, rates, amounts and case evidence.
+- **Better customer insight** through reconciled KYC coverage and verified device and country context.
+- **Greater operational visibility** through linked alerts, case statuses and investigation timestamps.
+- **Stronger performance assessment** through confirmed outcomes and comparable reporting periods.
+
+These are intended outcomes. The current analysis does not quantify a reduction in fraud, financial savings or improved detection performance.
+
+---
+
+# KEY STRATEGIC INSIGHT
+
+The analysis reveals that investigation priorities change depending on the measure used. POS leads by fraud-labelled record volume, Money Laundering leads by provisional case-type amount, and several small channel and KYC groups show high recorded rates.
+
+PCN Bank therefore needs to consider **exposure, population size, data quality and case evidence together**. Customer signals help identify where to investigate; operational evidence determines whether the bank can assess how effectively those investigations and controls perform.
+
+The immediate opportunity is to connect recorded exposure with verified evidence and accountable action.
+
+---
+
+# CONCLUSION
+
+This project examined recorded fraud exposure, customer behaviour and operational monitoring through three Excel dashboards and supporting investigation tables.
+
+The findings identified concentrations across channels, case types and merchant categories, alongside customer associations involving devices, country comparisons, KYC status and hourly transaction activity. The operational review also revealed missing information and posting-date exceptions that constrain interpretation.
+
+The dashboards provide a foundation for investigation, while their accompanying notes distinguish supported findings from unanswered questions. Confirmed losses, formal high-risk classifications, multiple-device login activity, detection accuracy and investigation bottlenecks require additional definitions or evidence.
+
+The recommended next step is to validate outstanding exceptions, review represented accounts and customers, and link alerts with case outcomes. This would allow PCN Bank to move from understanding recorded exposure towards a more reliable assessment of fraud-monitoring performance.
