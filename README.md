@@ -143,3 +143,165 @@ A separate calendar table supports time-based analysis.
 **Raw dataset → Google Sheets preparation → Power Query → Power Pivot and DAX → PivotTable investigation → Excel dashboards → Executive presentation and recommendations**
 
 This workflow provides a shared reporting foundation for the project. It does not establish integration with live banking systems or continuous real-time monitoring.
+
+# DATA CLEANING & PREPARATION
+
+The dataset was reviewed and prepared to improve consistency before modelling and analysis. The raw data was preserved separately so that cleaned values and exceptions could be traced back to the source.
+
+Initial preparation was completed in Google Sheets following Excel performance interruptions. The prepared data was then imported into Excel through Power Query for further type handling and validation.
+
+### 1. Text Cleaning and Category Standardisation
+
+Unnecessary spaces and non-printing characters were addressed using functions such as `TRIM`, `CLEAN` and `SUBSTITUTE`.
+
+Selected category labels and country names were standardised for consistent grouping. Meaningful distinctions were retained: categories such as Credit Card and Card Fraud were not combined without supporting definitions.
+
+### 2. Binary Flag Normalisation
+
+Fraud labels, SAR filing indicators and new-device flags contained different representations of the same values.
+
+| Field | Examples standardised to 0 | Examples standardised to 1 |
+| --- | --- | --- |
+| Fraud label | `0`, `N`, `No` | `1`, `Y`, `Yes` |
+| SAR filing indicator | `0`, `N`, `No`, `Not Filed` | `1`, `Y`, `Yes`, `Filed` |
+| New-device flag | `0`, `N`, `No`, `False` | `1`, `Y`, `Yes`, `True` |
+
+Whitespace and case differences were handled before mapping. Unknown values were not assumed to mean zero; mappings remained specific to each field.
+
+### 3. Date and Time Preparation
+
+Mixed date representations were reviewed and converted into date values for analysis. Transaction time was handled separately as a time field.
+
+Missing dates remained blank rather than being replaced with artificial dates or text inside date columns. Separate date-status fields were added to distinguish available and missing dates.
+
+Ambiguous day/month values remain subject to source validation. A consistent display format does not establish that a date was interpreted correctly.
+
+### 4. Numerical Data Types
+
+Transaction amounts, activity counts, ages and risk scores were reviewed for numerical use in Power Query and the analytical model.
+
+Missing numerical values were retained as unknown. Missing amounts were not treated as zero-value transactions, and missing behavioural counts were not treated as zero activity.
+
+### 5. Repeated Transaction IDs
+
+The prepared dataset retained all **1,000 records**, containing **930 unique transaction IDs**.
+
+Repeated IDs were preserved because some associated records contain different amounts or dates. Removing them without confirming their meaning could discard relevant information or distort the analysis.
+
+### 6. Data-Quality Checks
+
+The prepared data and supporting investigation views identified the following exceptions:
+
+| Check | Finding |
+| --- | ---: |
+| Missing transaction dates | 86 records |
+| Missing posting dates | 62 records |
+| Records missing either date | 143 records |
+| Missing transaction amounts | 14 records |
+| Missing KYC status | 15 records |
+| Missing device IDs | 345 records |
+| Negative posting intervals | 63 records |
+
+Missing-date counts overlap: five records lack both dates. Negative and unusually long posting intervals were retained for investigation rather than corrected by guessing.
+
+### Preparation Outcome
+
+The prepared dataset supported the Power Pivot model, analytical measures and three Excel dashboards. Outstanding issues—including date interpretation, repeated transaction IDs, currency definitions and incomplete segment coverage—were documented as limitations requiring further validation.
+
+## DATA MODELLING & KPI DEFINITIONS
+
+The prepared data was loaded into Power Pivot to create a shared analytical model for the three Excel dashboards. DAX measures and calculated columns supported consistent calculations across PivotTables and dashboard views.
+
+### Data Model Structure
+
+The model contains two main tables:
+
+| Table | Role | Description |
+| --- | --- | --- |
+| `Cleaned_Data` | Fact table | Contains the 1,000 prepared records, including transaction details, customer identifiers, recorded flags and behavioural information. |
+| `Date_Table` | Date dimension | Contains calendar dates and fields for year, month and year-month analysis. |
+
+The analytical grain is **one supplied record per row**, rather than one unique transaction. Repeated transaction IDs remain in the fact table, so record counts and distinct transaction counts are reported separately.
+
+### Table Relationships
+
+The model diagram shows two one-to-many relationships between the calendar and prepared records:
+### Data Model Diagram
+
+![PCN Bank Power Pivot Data Model](assets/data-model.png)
+
+The model connects `Date_Table` with `Cleaned_Data` through one-to-many relationships. The solid line represents an active relationship, while the dashed line represents an inactive relationship.
+
+* **One side:** the calendar table, containing a unique row for each date.
+* **Many side:** the prepared records, where multiple records can share a date.
+* **Solid line:** the active relationship used for default date filtering.
+* **Dashed line:** an inactive relationship representing an alternative date role.
+
+Transaction-date and posting-date analysis require different date roles. The relationship endpoints must be checked to ensure transaction trends use `transaction_date`. Calculations using an inactive date relationship require explicit handling in DAX.
+
+### Calculated Fields
+
+Calculated and prepared fields supported grouping and investigation:
+
+| Field | Analytical purpose |
+| --- | --- |
+| Fraud Status | Provides readable groups for fraud-labelled and non-fraud-labelled records. |
+| Country Comparison | Compares recorded customer and merchant countries. Unknown-country treatment requires review. |
+| Transaction Date Status | Distinguishes available and missing transaction dates. |
+| Posting Date Status | Distinguishes available and missing posting dates. |
+| Posting Interval Days | Calculates posting date minus transaction date when both are available. |
+| Calendar fields | Support chronological month and year-month analysis. |
+
+### Fraud Detection KPIs
+
+| KPI | Definition |
+| --- | --- |
+| Total Records | Number of rows in `Cleaned_Data`. |
+| Distinct Transactions | Number of unique transaction IDs. |
+| Records Labelled Fraud | Number of records where `fraud_label = 1`. |
+| Records with Known Fraud Label | Number of records with a nonmissing fraud label equal to 0 or 1. |
+| Recorded Fraud Rate | Fraud-labelled records divided by records with a known fraud label. |
+| Fraud-Labelled Amount USD | Sum of available amounts on fraud-labelled records, using the USD-named field. |
+
+Recorded amounts remain provisional because currency definitions and repeated transaction IDs require validation. They are not confirmed financial losses.
+
+### Customer Fraud Behaviour KPIs
+
+| KPI | Definition |
+| --- | --- |
+| Distinct Customers | Number of unique represented customer IDs. |
+| Customers with Fraud-Labelled Records | Unique customers with at least one fraud-labelled record. |
+| Customer Fraud Exposure Rate | Exposed customers divided by represented customers. |
+| Average Failed Login Attempts | Average of available values in `failed_login_attempts_24h`. |
+| Average Hourly Transaction Count | Average of available values in `txn_count_1h`. |
+| Distinct Devices Used | Number of available unique device IDs associated with a customer’s transaction records. |
+| Unique Transactions with Known Countries | Distinct transaction IDs eligible for a comparison using known customer and merchant countries. |
+| Unique Cross-Country Transactions | Eligible distinct transaction IDs with different customer and merchant countries. |
+| Cross-Country Transaction Share | Unique cross-country transactions divided by unique transactions with known countries. |
+
+Device counts do not establish separate login events. Cross-country shares do not measure frequency over time without an agreed observation period.
+
+### Operational Efficiency KPIs
+
+| KPI | Definition |
+| --- | --- |
+| SAR Filed Records | Number of records where `sar_flag = 1`. |
+| Fraud Records with SAR Filed | Records with both `fraud_label = 1` and `sar_flag = 1`. |
+| Recorded SAR Filing Share on Fraud | Fraud-labelled records with SAR filed divided by fraud-labelled records. |
+| Transaction Date Completeness | Records with an available transaction date divided by total records. |
+| Posting Date Completeness | Records with an available posting date divided by total records. |
+| Records Missing Amount | Number of records without a transaction amount. |
+| Average Posting Interval Days | Average posting interval within the defined usable-date population. |
+| Records with Negative Posting Interval | Records where posting date precedes transaction date. |
+
+Date completeness measures availability, not accuracy. Posting intervals do not measure fraud-investigation speed, and SAR filing share does not establish compliance or detection effectiveness.
+
+### Calculation and Formatting Principles
+
+* Rates use matching numerators, denominators and filter contexts.
+* Percentage measures return fractions and are formatted as percentages; they are not divided by 100 again.
+* Counts are displayed as whole numbers, while averages retain appropriate decimal precision.
+* Missing numerical values are excluded from averages rather than replaced with zero.
+* Distinct customer, transaction and device counts are not automatically additive across groups.
+* Total rates are recalculated from their components rather than calculated by averaging segment percentages.
+* Date relationships and filter behaviour require validation before interpreting time-based results.
